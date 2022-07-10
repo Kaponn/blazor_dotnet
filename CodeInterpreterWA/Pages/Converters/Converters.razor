@@ -1,0 +1,49 @@
+﻿@page "/converters"
+
+<h3>Converters</h3>
+
+<select @bind="_selectedConverterId" class="form-cotrol col-md-4 mb-4">
+    @foreach (var converter in _availableConverters)
+    {
+        <option value="@converter.Id">@converter.NameOfConverter</option>
+    }
+</select>
+
+@switch (_selectedConverterId)
+{
+    case 1:
+        <TimeConverter></TimeConverter>
+        break;
+    case 2:
+        <DistanceConverter DistanceFactor="0.0254"></DistanceConverter>
+        break;
+    case 3:
+        <MoneyConverter RateFactor="3.96"></MoneyConverter>
+        break;
+    default:
+        <span>Please select converter...</span>
+        break;
+}
+
+@code {
+    readonly List<ConverterItem> _availableConverters = new List<ConverterItem>
+    {
+            new ConverterItem (1, "Time converter"),
+            new ConverterItem (2, "Distance converter"),
+            new ConverterItem (3, "Money converter")
+        };
+
+    int _selectedConverterId;
+
+    class ConverterItem
+    {
+        public ConverterItem(int id, string nameOfConverter)
+        {
+            Id = id;
+            NameOfConverter = nameOfConverter;
+        }
+
+        public int Id { get; set; }
+        public string NameOfConverter { get; set; }
+    }
+}

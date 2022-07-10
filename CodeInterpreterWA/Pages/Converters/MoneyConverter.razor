@@ -1,0 +1,40 @@
+﻿<div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>USD</label>
+            <input type="number" class="form-control" placeholder="Dollars..." @bind="_usd" />
+            <input type="number" class="form-control" placeholder="Podaj przelicznik" @bind="_rate" />
+        </div>
+        <button class="btn btn-primary" @onclick="ConvertMoney">
+            <span class="oi oi-dollar mr-2" aria-hidden="true"></span> Convert
+        </button>
+    </div>
+
+    @if (_pln != null)
+    {
+        <div class="row blockquote mt-5">
+            <span> $@_usd is equal to @_pln zł !</span>
+        </div>
+    }
+</div>
+
+@code {
+    double? _pln = null;
+    double? _rate = null;
+
+    private double? _usd { get; set; }
+
+    [Parameter]
+    public double RateFactor { get; set; }
+
+    private void ConvertMoney()
+    {
+        if (_rate != null)
+        {
+            _pln =  _usd * _rate;
+            return;
+        }
+
+        _pln = _usd * RateFactor;
+    }
+}

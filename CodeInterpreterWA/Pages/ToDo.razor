@@ -1,0 +1,50 @@
+﻿@page "/todo"
+@inject IMatToaster Toaster
+
+<h3>ToDo</h3>
+
+<EditForm Model="@_todo" OnValidSubmit="@Add" class="col-md-6 mb-3">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText class="form-control" id="title" @bind-Value="_todo.Title" />
+
+    <button type="submit" class="btn btn-primary mt-1" @onclick="Add" disabled="@(!context.Validate())">
+        <span class="oi oi-plus mr-2" aria-hidden="true"></span>Add
+    </button>
+</EditForm>
+
+<ul class="list-group">
+    @foreach(var todo in _todos)
+     {
+        <li class="list-group-item">
+            @todo.Title
+                <div class="float-right custom-control custom-checkbox">
+                    <input type="checkbox" class="form-check-input" id="doneCheckBox" @bind="todo.IsDone" />
+                    <label class="form-check-label" for="doneCheckBox">Done</label>
+                </div>
+        </li>
+     }
+</ul>
+
+@code {
+    private IList<ToDoItemModel> _todos = new List<ToDoItemModel>
+    {
+        new ToDoItemModel { IsDone = false, Title = "Poczytać o Blazor" },
+        new ToDoItemModel { IsDone = true, Title = "Utworzyć przelicznik $ na PLN"}
+    };
+
+    ToDoItemModel _todo = new ToDoItemModel();
+
+    private void Add()
+    {
+        if (!string.IsNullOrEmpty(_todo.Title))
+        {
+            _todos.Add(new ToDoItemModel { Title = _todo.Title });
+
+            Toaster.Add($"ToDo Item `{_todo.Title}` has been added successfully", MatToastType.Success, "Add");
+
+            _todo = new ToDoItemModel();
+        }
+    }
+}
